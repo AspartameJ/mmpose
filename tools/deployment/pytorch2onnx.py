@@ -64,14 +64,28 @@ def pytorch2onnx(model,
     one_img = torch.randn(input_shape)
 
     register_extra_symbolics(opset_version)
-    torch.onnx.export(
-        model,
-        one_img,
-        output_file,
-        export_params=True,
-        keep_initializers_as_inputs=True,
-        verbose=show,
-        opset_version=opset_version)
+    if args.test_dynamic:
+        input_names = ["input"]
+        dynamic_axes={"input": {0: "-1", 2: "-1", 3: "-1"}}
+        torch.onnx.export(
+            model,
+            one_img,
+            output_file,
+            export_params=True,
+            keep_initializers_as_inputs=True,
+            verbose=show,
+            opset_version=opset_version,
+            input_names=input_names,
+            dynamic_axes=dynamic_axes)
+    else:
+        torch.onnx.export(
+            model,
+            one_img,
+            output_file,
+            export_params=True,
+            keep_initializers_as_inputs=True,
+            verbose=show,
+            opset_version=opset_version)        
 
     print(f'Successfully exported ONNX model: {output_file}')
     if verify:
@@ -114,6 +128,7 @@ def parse_args():
     parser.add_argument('--show', action='store_true', help='show onnx graph')
     parser.add_argument('--output-file', type=str, default='tmp.onnx')
     parser.add_argument('--opset-version', type=int, default=11)
+    parser.add_argument('--test-dynamic', action='store_true', help='hrnet_w32_coco_512x512-bcb8c247_20200816.pth to -1 3 -1 -1 onnx')
     parser.add_argument(
         '--verify',
         action='store_true',
