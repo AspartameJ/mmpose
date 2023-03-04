@@ -154,7 +154,7 @@ def main():
         scale_tags_list = []
         
         for idx, s in enumerate(sorted(test_scale_factor, reverse=True)):
-            resized_result_filename = '{}_0.npy'.format(image_name.split('\\')[-1].split('.')[0])
+            resized_result_filename = '{}_0.npy'.format(image_name.split('/')[-1].split('.')[0])
             resized_result_path = os.path.join(args.resized_img_result,resized_result_filename)
 
             output_result = np.load(resized_result_path)
@@ -167,7 +167,7 @@ def main():
                 
             if cfg.model.test_cfg.get('flip_test', True):
                 # use flip test
-                fliped_result_filename = '{}_0.npy'.format(image_name.split('\\')[-1].split('.')[0])
+                fliped_result_filename = '{}_0.npy'.format(image_name.split('/')[-1].split('.')[0])
                 fliped_result_path = os.path.join(args.fliped_img_result,fliped_result_filename)
 
                 outputs_flipped = np.load(fliped_result_path)
