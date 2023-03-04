@@ -19,6 +19,7 @@ from mmpose.core.post_processing import oks_nms
 from mmpose.core.post_processing.group import HeatmapParser
 from mmcv.runner import get_dist_info
 from mmpose.datasets import build_dataset
+import shutil
 
 def merge_configs(cfg1, cfg2):
     # Merge cfg2 into cfg1
@@ -67,6 +68,10 @@ def main():
     parser.add_argument('--out',default='eval_result.json', help='output result file')
 
     args = parser.parse_args()
+
+    if os.path.exists(args.work_dir):
+        shutil.rmtree(args.work_dir)
+    os.makedirs(args.resized_img_root)
 
     # prepare image list
     if osp.isfile(args.img_path):
