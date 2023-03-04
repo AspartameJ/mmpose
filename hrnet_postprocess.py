@@ -71,7 +71,7 @@ def main():
 
     if os.path.exists(args.work_dir):
         shutil.rmtree(args.work_dir)
-    os.makedirs(args.resized_img_root)
+    os.makedirs(args.work_dir)
 
     # prepare image list
     if osp.isfile(args.img_path):
