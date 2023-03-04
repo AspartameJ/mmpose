@@ -82,12 +82,12 @@ root@2e9162c9611b:~/hrnet/mmpose# python3 hrnet_preprocess.py configs/body/2d_kp
 
 # 模型推理
 root@2e9162c9611b:~/hrnet/mmpose# mkdir output_dir output_flip_dir
-root@2e9162c9611b:~/hrnet/mmpose# python3 -m ais_bench --model dynamic_hrnet.om --input ./resized_imgs --output output_dir --outfmt NPY --auto_set_dymdims_mode 1
-root@2e9162c9611b:~/hrnet/mmpose# python3 -m ais_bench --model dynamic_hrnet.om --input ./fliped_imgs --output output_flip_dir --outfmt NPY --auto_set_dymdims_mode 1
+root@2e9162c9611b:~/hrnet/mmpose# python3 -m ais_bench --model dynamic_hrnet.om --input ./resized_imgs --output output_dir --output_dirname resized_img_result --outfmt NPY --auto_set_dymdims_mode 1
+root@2e9162c9611b:~/hrnet/mmpose# python3 -m ais_bench --model dynamic_hrnet.om --input ./fliped_imgs --output output_flip_dir --output_dirname flip_img_result --outfmt NPY --auto_set_dymdims_mode 1
 
 # 模型后处理(包括精度计算)
 root@2e9162c9611b:~/hrnet/mmpose# mkdir om_work_dir
-root@2e9162c9611b:~/hrnet/mmpose# python3 hrnet_postprocess.py configs/body/2d_kpt_sview_rgb_img/associative_embedding/coco/hrnet_w32_coco_512x512.py hrnet_w32_coco_512x512-bcb8c247_20200816.pth --img-path ./data/coco/val2017 --resized-img-result ./output_dir/2023_03_02-07_52_59 --fliped-img-result ./output_flip_dir/2023_03_02-08_00_28 --out om_eval_result.json --work-dir ./om_work_dir --eval mAP
+root@2e9162c9611b:~/hrnet/mmpose# python3 hrnet_postprocess.py configs/body/2d_kpt_sview_rgb_img/associative_embedding/coco/hrnet_w32_coco_512x512.py hrnet_w32_coco_512x512-bcb8c247_20200816.pth --img-path ./data/coco/val2017 --resized-img-result ./output_dir/resized_img_result --fliped-img-result ./output_flip_dir/flip_img_result --out om_eval_result.json --work-dir ./om_work_dir --eval mAP
 ```
 ## 精度结果
 <img src='mAP.jpg' width='450'>
