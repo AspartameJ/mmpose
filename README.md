@@ -67,7 +67,6 @@ root@2e9162c9611b:~/hrnet/mmpose# pip install torchvision==0.9.1 onnx onnxruntim
 root@2e9162c9611b:~/hrnet/mmpose# python3 tools/deployment/pytorch2onnx.py ./configs/body/2d_kpt_sview_rgb_img/associative_embedding/coco/hrnet_w32_coco_512x512.py ./hrnet_w32_coco_512x512-bcb8c247_20200816.pth --verify --output-file dynamic_hrnet.onnx --opset-version 11 --test-dynamic
 
 # 模型简化
-模型简化
 root@2e9162c9611b:~/hrnet/mmpose# python3 remove_initializer_from_input.py --input dynamic_hrnet.onnx --output dynamic_hrnet_remove_initializer_from_input.onnx
 
 root@2e9162c9611b:~/hrnet/mmpose# python3 ./onnx2onnxsim.py --input ./dynamic_hrnet_remove_initializer_from_input.onnx --output ./dynamic_hrnet_sim.onnx
