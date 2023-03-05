@@ -20,6 +20,7 @@ from mmpose.core.post_processing.group import HeatmapParser
 from mmcv.runner import get_dist_info
 from mmpose.datasets import build_dataset
 import shutil
+import json
 
 def merge_configs(cfg1, cfg2):
     # Merge cfg2 into cfg1
@@ -31,7 +32,7 @@ def merge_configs(cfg1, cfg2):
             cfg1[k] = v
     return cfg1
 
-def main():
+def hrnet_postprocess():
     parser = ArgumentParser()
     parser.add_argument('pose_config', help='Config file for detection')
     parser.add_argument('pose_checkpoint', help='Checkpoint file')
@@ -314,9 +315,15 @@ def main():
 
         dataset_ = build_dataset(cfg.data.test, dict(test_mode=True))
         results = dataset_.evaluate(results, args.work_dir, **eval_config)
-        for k, v in sorted(results.items()):
-            print(f'{k}: {v}')    
+
+        # 保存到json文件
+        json_str = json.dumps(results)
+        with open('mAP.json', 'w') as fp:
+            fp.write(json_str)
+
+        # for k, v in sorted(results.items()):
+        #     print(f'{k}: {v}')
 
 
 if __name__ == '__main__':
-    main()
+    hrnet_postprocess()
