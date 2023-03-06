@@ -42,15 +42,17 @@ def hrnet_om_infer_result(result_keypoints='om_work_dir/result_keypoints.json',
 
                 log_dict[val['image_id']]['target'].append(format_kepoints)
 
+    result_list = []
     for v in log_dict.values():
         result_dict['event'] = 'INFER_RESULT'
         result_dict['value'] = v
+        result_list.append(json.dumps(result_dict)+'\n')
         # print(result_dict)
     # json_str = json.dumps(log_dict)
     # with open(output_file, 'w') as fp:
     #     fp.write(json_str)
     log_dict.clear()
-    return result_dict
+    return result_list
 
 if __name__ == '__main__':
     infer_result = hrnet_om_infer_result(result_keypoints='tmp_work_dir/result_keypoints.json')
