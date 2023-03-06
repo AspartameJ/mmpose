@@ -46,7 +46,7 @@ docker run -it -u root --name torch_npu --ipc=host \
 -v /var/log/npu/:/usr/slog \
 -v /usr/local/sbin/npu-smi:/usr/local/sbin/npu-smi \
 -v /etc/ascend_install.info:/etc/ascend_install.info \
--v /path/to//hrnet:/root/hrnet \
+-v /path/to/hrnet:/root/hrnet \
 ascendhub.huawei.com/public-ascendhub/pytorch-modelzoo:22.0.RC3-1.8.1 \
 bash
 ```

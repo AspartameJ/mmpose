@@ -3,7 +3,7 @@ test_path_dir=`pwd`
 RANK_ID=$1
 
 if [ ! -d ${test_path_dir}/output/${RANK_ID} ];then
-  mkdir ${test_path_dir}/output/${RANK_ID}
+  mkdir -p ${test_path_dir}/output/${RANK_ID}
 fi
 
 for i in $(seq 1 500000)
