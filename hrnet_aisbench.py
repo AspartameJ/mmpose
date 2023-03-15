@@ -52,7 +52,7 @@ def hrnet_postprocess(img_metas, cfg, image_resized_output, image_fliped_output)
     scale_tags_list = []
     
     for idx, s in enumerate(sorted(test_scale_factor, reverse=True)):
-        output_result = [torch.from_numpy(image_resized_output)]  #numpy2tensor2list
+        output_result = [torch.from_numpy(image_resized_output[0])]  #numpy2tensor2list
         
         heatmaps, tags = split_ae_outputs(
             output_result, cfg.model.test_cfg['num_joints'],
@@ -61,7 +61,7 @@ def hrnet_postprocess(img_metas, cfg, image_resized_output, image_fliped_output)
             
         if cfg.model.test_cfg.get('flip_test', True):
             # use flip test
-            outputs_flipped = [torch.from_numpy(image_fliped_output)]  #numpy2tensor2list
+            outputs_flipped = [torch.from_numpy(image_fliped_output[0])]  #numpy2tensor2list
 
             heatmaps_flipped, tags_flipped = split_ae_outputs(
                 outputs_flipped, cfg.model.test_cfg['num_joints'],
@@ -165,7 +165,7 @@ def hrnet_postprocess(img_metas, cfg, image_resized_output, image_fliped_output)
     results.append(onnx_result)
     return results
 
-def main():
+def hrnet_aisbench():
     """Visualize the demo images."""
     parser = ArgumentParser()
     parser.add_argument('pose_config', help='Config file for detection')
@@ -259,4 +259,4 @@ def main():
         print(results)
 
 if __name__ == '__main__':
-    main()
+    hrnet_aisbench()
