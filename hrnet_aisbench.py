@@ -165,21 +165,7 @@ def hrnet_postprocess(img_metas, cfg, image_resized_output, image_fliped_output)
     results.append(onnx_result)
     return results
 
-def hrnet_aisbench():
-    """Visualize the demo images."""
-    parser = ArgumentParser()
-    parser.add_argument('pose_config', help='Config file for detection')
-    parser.add_argument('pose_checkpoint', help='Checkpoint file')
-    parser.add_argument('pose_om', help='om file')
-    parser.add_argument(
-        '--img-path',
-        type=str,
-        help='Path to an image file or a image folder.')
-    parser.add_argument(
-        '--device', default='cpu', help='Device used for inference')
-
-    args = parser.parse_args()
-
+def hrnet_aisbench(args):
     # prepare image list
     if os.path.isfile(args.img_path):
         image_list = [args.img_path]
@@ -259,4 +245,17 @@ def hrnet_aisbench():
         print(results)
 
 if __name__ == '__main__':
-    hrnet_aisbench()
+    """Visualize the demo images."""
+    parser = ArgumentParser()
+    parser.add_argument('pose_config', help='Config file for detection')
+    parser.add_argument('pose_checkpoint', help='Checkpoint file')
+    parser.add_argument('pose_om', help='om file')
+    parser.add_argument(
+        '--img-path',
+        type=str,
+        help='Path to an image file or a image folder.')
+    parser.add_argument(
+        '--device', default='cpu', help='Device used for inference')
+
+    args = parser.parse_args()
+    hrnet_aisbench(args)
