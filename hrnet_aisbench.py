@@ -36,8 +36,8 @@ def infer_dymdims(ndata, model_path):
 def hrnet_preprocess(img_metas):
     aug_data = img_metas['aug_data']
     image_resized = aug_data[0].to('cpu')
-    image_fliped = torch.flip(image_resized, [3]).numpy().dtype(np.float32)
-    image_resized = image_resized.numpy().dtype(np.float32)
+    image_fliped = torch.flip(image_resized, [3]).numpy().astype(np.float32)
+    image_resized = image_resized.numpy().astype(np.float32)
 
     return image_resized, image_fliped
 
