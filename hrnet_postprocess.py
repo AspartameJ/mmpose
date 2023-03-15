@@ -102,7 +102,6 @@ def hrnet_postprocess():
         dataset_info = DatasetInfo(dataset_info)
         dataset_name = dataset_info.dataset_name
         flip_index = dataset_info.flip_index
-        sigmas = getattr(dataset_info, 'sigmas', None)
         skeleton = getattr(dataset_info, 'skeleton', None)
 
     # optional
