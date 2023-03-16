@@ -11,7 +11,7 @@ from mmcv.parallel import collate, scatter
 
 import numpy as np
 import torch
-import shutil
+
 from mmpose.core.evaluation import (aggregate_scale, aggregate_stage_flip,
                                     flip_feature_maps, get_group_preds,
                                     split_ae_outputs)
@@ -19,9 +19,9 @@ from mmpose.core.post_processing.group import HeatmapParser
 from ais_bench.infer.interface import InferSession
 
 
-def infer_dymdims(ndata, model_path):
-    device_id = 0
-    session = InferSession(device_id, model_path)
+def infer_dymdims(session, ndata):
+    # device_id = 0
+    # session = InferSession(device_id, model_path)
 
     #ndata = np.zeros([1,3,224,224], dtype=np.float32)
 
@@ -165,22 +165,26 @@ def hrnet_postprocess(img_metas, cfg, image_resized_output, image_fliped_output)
     results.append(onnx_result)
     return results
 
-def hrnet_aisbench(args):
+def hrnet_aisbench(args_pose_config, args_pose_checkpoint, args_pose_om, args_img_path, args_device):
     # prepare image list
-    if os.path.isfile(args.img_path):
-        image_list = [args.img_path]
-    elif os.path.isdir(args.img_path):
+    if os.path.isfile(args_img_path):
+        image_list = [args_img_path]
+    elif os.path.isdir(args_img_path):
         image_list = [
-            os.path.join(args.img_path, fn) for fn in os.listdir(args.img_path)
+            os.path.join(args_img_path, fn) for fn in os.listdir(args_img_path)
             if fn.lower().endswith(('.png', '.jpg', '.jpeg', '.tiff', '.bmp'))
         ]
     else:
         raise ValueError('Image path should be an image or image folder.'
-                         f'Got invalid image path: {args.img_path}')
+                         f'Got invalid image path: {args_img_path}')
     
+    # ascend model
+    device_id = 0
+    session = InferSession(device_id, args_pose_om)
+
     # build the pose model from a config file and a checkpoint file
     pose_model = init_pose_model(
-        args.pose_config, args.pose_checkpoint, device=args.device.lower())
+        args_pose_config, args_pose_checkpoint, device=args_device.lower())
 
     dataset = pose_model.cfg.data['test']['type']
     dataset_info = pose_model.cfg.data['test'].get('dataset_info', None)
@@ -237,12 +241,12 @@ def hrnet_aisbench(args):
         img_metas = img_metas[0]
         
         image_resized, image_fliped = hrnet_preprocess(img_metas)
-        image_resized_output = infer_dymdims(image_resized, args.pose_om)
-        image_fliped_output = infer_dymdims(image_fliped, args.pose_om)
+        image_resized_output = infer_dymdims(session, image_resized)
+        image_fliped_output = infer_dymdims(session, image_fliped)
 
         results = hrnet_postprocess(img_metas, cfg, image_resized_output, image_fliped_output)
 
-        print(results)
+        return results
 
 if __name__ == '__main__':
     """Visualize the demo images."""
@@ -258,4 +262,4 @@ if __name__ == '__main__':
         '--device', default='cpu', help='Device used for inference')
 
     args = parser.parse_args()
-    hrnet_aisbench(args)
+    results = hrnet_aisbench(args.pose_config, args.pose_checkpoint, args.pose_om, args.img_path, args.device)
