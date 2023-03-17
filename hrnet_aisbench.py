@@ -1,4 +1,5 @@
 import os
+import shutil
 import warnings
 from argparse import ArgumentParser
 
@@ -45,7 +46,6 @@ def hrnet_preprocess(img_metas):
 
 def hrnet_postprocess(img_metas, cfg, image_resized_output, image_fliped_output):
     return_heatmap = False
-    results = []
 
     test_scale_factor = img_metas['test_scale_factor']
 
@@ -177,16 +177,20 @@ def merge_configs(cfg1, cfg2):
             cfg1[k] = v
     return cfg1
 
-def eval(cfg, results, output_file):
+def eval(cfg, results, args_work_dir):
+    if os.path.exists(args_work_dir):
+        shutil.rmtree(args_work_dir)
+    os.makedirs(args_work_dir)
+    
     eval_config = cfg.get('evaluation', {})
     eval_config = merge_configs(eval_config, dict(metric='mAP'))
 
-    output_file = './hrnet_infer_results.json'
+    output_file = 'hrnet_infer_results.json'
     print(f'\nwriting results to {output_file}')
-    mmcv.dump(results, output_file)
+    mmcv.dump(results, os.path.join(args_work_dir, output_file))
 
     dataset_ = build_dataset(cfg.data.test, dict(test_mode=True))
-    results = dataset_.evaluate(results, args.work_dir, **eval_config)
+    results = dataset_.evaluate(results, args_work_dir, **eval_config)
 
     for k, v in sorted(results.items()):
         print(f'{k}: {v}')
@@ -274,8 +278,8 @@ def hrnet_aisbench(args_pose_config, args_pose_checkpoint, args_pose_om, args_im
         om_results = hrnet_postprocess(img_metas, cfg, image_resized_output, image_fliped_output)
         all_results.append(om_results)
 
-        output_file = './hrnet_infer_results.json'
-        eval(cfg, all_results, output_file)
+        output_dir = 'hrnet_poseprocess_result'
+        eval(cfg, all_results, output_dir)
 
     return all_results
 
