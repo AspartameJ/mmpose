@@ -201,6 +201,7 @@ def hrnet_aisbench(args_pose_config, args_pose_checkpoint, args_pose_om, args_im
         skeleton = getattr(dataset_info, 'skeleton', None)
 
     cfg = pose_model.cfg
+    all_results = []
     for image_name in mmcv.track_iter_progress(image_list):
     # for image_name in image_list:
         device = next(pose_model.parameters()).device
@@ -245,8 +246,9 @@ def hrnet_aisbench(args_pose_config, args_pose_checkpoint, args_pose_om, args_im
         image_fliped_output = infer_dymdims(session, image_fliped)
 
         results = hrnet_postprocess(img_metas, cfg, image_resized_output, image_fliped_output)
+        all_results.append(results)
 
-        return results
+    return all_results
 
 if __name__ == '__main__':
     """Visualize the demo images."""
