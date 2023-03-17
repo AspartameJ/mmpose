@@ -194,6 +194,8 @@ def eval(cfg, results, args_work_dir):
 
     for k, v in sorted(results.items()):
         print(f'{k}: {v}')
+    
+    return results
 
 def hrnet_aisbench(args_pose_config, args_pose_checkpoint, args_pose_om, args_img_path, args_device):
     # prepare image list
