@@ -281,8 +281,8 @@ def hrnet_aisbench(args_pose_config, args_pose_checkpoint, args_pose_om, args_im
         all_results.append(om_results)
 
         output_dir = 'hrnet_poseprocess_result'
-        eval(cfg, all_results, output_dir)
-
+    
+    eval(cfg, all_results, output_dir)
     return all_results
 
 if __name__ == '__main__':
