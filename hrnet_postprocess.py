@@ -154,7 +154,7 @@ def hrnet_postprocess():
 
         test_scale_factor = img_metas['test_scale_factor']
 
-        onnx_result = {}
+        om_result = {}
         scale_heatmaps_list = []
         scale_tags_list = []
         
@@ -273,23 +273,23 @@ def hrnet_postprocess():
         else:
             output_heatmap = None
         
-        onnx_result['preds'] = preds
-        onnx_result['scores'] = scores
-        onnx_result['image_paths'] = image_paths
-        onnx_result['output_heatmap'] = output_heatmap
-        results.append(onnx_result)
+        om_result['preds'] = preds
+        om_result['scores'] = scores
+        om_result['image_paths'] = image_paths
+        om_result['output_heatmap'] = output_heatmap
+        results.append(om_result)
         ################################################################
         # if return_heatmap:
-        #     returned_outputs.append(onnx_result['output_heatmap'])
+        #     returned_outputs.append(om_result['output_heatmap'])
         # else:
         #     returned_outputs.append(None)
         
-        # for idx, pred in enumerate(onnx_result['preds']):
+        # for idx, pred in enumerate(om_result['preds']):
         #     area = (np.max(pred[:, 0]) - np.min(pred[:, 0])) * (
         #         np.max(pred[:, 1]) - np.min(pred[:, 1]))
         #     pose_results.append({
         #         'keypoints': pred[:, :3],
-        #         'score': onnx_result['scores'][idx],
+        #         'score': om_result['scores'][idx],
         #         'area': area,
         #     })
 

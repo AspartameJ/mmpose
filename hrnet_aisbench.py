@@ -16,6 +16,8 @@ from mmpose.core.evaluation import (aggregate_scale, aggregate_stage_flip,
                                     flip_feature_maps, get_group_preds,
                                     split_ae_outputs)
 from mmpose.core.post_processing.group import HeatmapParser
+from mmpose.datasets import build_dataset
+
 from ais_bench.infer.interface import InferSession
 
 
@@ -47,7 +49,7 @@ def hrnet_postprocess(img_metas, cfg, image_resized_output, image_fliped_output)
 
     test_scale_factor = img_metas['test_scale_factor']
 
-    onnx_result = {}
+    om_result = {}
     scale_heatmaps_list = []
     scale_tags_list = []
     
@@ -158,12 +160,36 @@ def hrnet_postprocess(img_metas, cfg, image_resized_output, image_fliped_output)
     else:
         output_heatmap = None
     
-    onnx_result['preds'] = preds
-    onnx_result['scores'] = scores
-    onnx_result['image_paths'] = image_paths
-    onnx_result['output_heatmap'] = output_heatmap
-    results.append(onnx_result)
-    return results
+    om_result['preds'] = preds
+    om_result['scores'] = scores
+    om_result['image_paths'] = image_paths
+    om_result['output_heatmap'] = output_heatmap
+    
+    return om_result
+
+def merge_configs(cfg1, cfg2):
+    # Merge cfg2 into cfg1
+    # Overwrite cfg1 if repeated, ignore if value is None.
+    cfg1 = {} if cfg1 is None else cfg1.copy()
+    cfg2 = {} if cfg2 is None else cfg2
+    for k, v in cfg2.items():
+        if v:
+            cfg1[k] = v
+    return cfg1
+
+def eval(cfg, results, output_file):
+    eval_config = cfg.get('evaluation', {})
+    eval_config = merge_configs(eval_config, dict(metric='mAP'))
+
+    output_file = './hrnet_infer_results.json'
+    print(f'\nwriting results to {output_file}')
+    mmcv.dump(results, output_file)
+
+    dataset_ = build_dataset(cfg.data.test, dict(test_mode=True))
+    results = dataset_.evaluate(results, args.work_dir, **eval_config)
+
+    for k, v in sorted(results.items()):
+        print(f'{k}: {v}')
 
 def hrnet_aisbench(args_pose_config, args_pose_checkpoint, args_pose_om, args_img_path, args_device):
     # prepare image list
@@ -245,8 +271,11 @@ def hrnet_aisbench(args_pose_config, args_pose_checkpoint, args_pose_om, args_im
         image_resized_output = infer_dymdims(session, image_resized)
         image_fliped_output = infer_dymdims(session, image_fliped)
 
-        results = hrnet_postprocess(img_metas, cfg, image_resized_output, image_fliped_output)
-        all_results.append(results)
+        om_results = hrnet_postprocess(img_metas, cfg, image_resized_output, image_fliped_output)
+        all_results.append(om_results)
+
+        output_file = './hrnet_infer_results.json'
+        eval(cfg, all_results, output_file)
 
     return all_results
 
@@ -264,4 +293,4 @@ if __name__ == '__main__':
         '--device', default='cpu', help='Device used for inference')
 
     args = parser.parse_args()
-    results = hrnet_aisbench(args.pose_config, args.pose_checkpoint, args.pose_om, args.img_path, args.device)
+    hrnet_aisbench(args.pose_config, args.pose_checkpoint, args.pose_om, args.img_path, args.device)
