@@ -234,6 +234,7 @@ def hrnet_aisbench(args_pose_config, args_pose_checkpoint, args_pose_om, args_im
 
     cfg = pose_model.cfg
     all_results = []
+    args_work_dir = 'hrnet_poseprocess_result'
     for image_name in mmcv.track_iter_progress(image_list):
     # for image_name in image_list:
         device = next(pose_model.parameters()).device
@@ -279,10 +280,8 @@ def hrnet_aisbench(args_pose_config, args_pose_checkpoint, args_pose_om, args_im
 
         om_results = hrnet_postprocess(img_metas, cfg, image_resized_output, image_fliped_output)
         all_results.append(om_results)
-
-        output_dir = 'hrnet_poseprocess_result'
     
-    eval(cfg, all_results, output_dir)
+    eval(cfg, all_results, args_work_dir)
     return all_results
 
 if __name__ == '__main__':
