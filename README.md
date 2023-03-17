@@ -79,7 +79,10 @@ root@2e9162c9611b:~/hrnet/mmpose# bs=1
 root@2e9162c9611b:~/hrnet/mmpose# chip_name=Ascend310
 root@2e9162c9611b:~/hrnet/mmpose# atc --framework=5 --model=dynamic_hrnet_sim.onnx --output=dynamic_hrnet --input_format=ND --input_shape="input:${bs},3,-1,-1" --dynamic_dims="512,832;512,768;576,512;512,704;832,512;512,960;512,1024;704,512;512,640;768,512;512,896;512,512;896,512;512,576;512,1152;512,1088;960,512;640,512;512,1920;512,1344;512,1728;512,2048;512,1280;1024,512;512,1792;1152,512;512,1984;512,2112;512,1472;512,1216;512,1536;512,1408;1344,512;1088,512;512,1856;512,1600" --soc_version=${chip_name}
 
-# 一键推理
+# 一键推理1
+root@2e9162c9611b:~/hrnet/mmpose# python3 hrnet_aisbench.py configs/body/2d_kpt_sview_rgb_img/associative_embedding/coco/hrnet_w32_coco_512x512.py hrnet_w32_coco_512x512-bcb8c247_20200816.pth dynamic_hrnet.om --img-path data/coco/val2017
+
+# 一键推理2
 root@2e9162c9611b:~/hrnet/mmpose# bash infer_start.sh
 ```
 ~~### 数据预处理
