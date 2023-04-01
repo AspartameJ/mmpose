@@ -20,6 +20,7 @@ from mmpose.core.post_processing.group import HeatmapParser
 from mmpose.datasets import build_dataset
 
 from ais_bench.infer.interface import InferSession
+import time
 
 
 def infer_dymdims(session, ndata):
@@ -285,6 +286,8 @@ def hrnet_aisbench(args_pose_config, args_pose_checkpoint, args_pose_om, args_im
     return all_results
 
 if __name__ == '__main__':
+    start_time_all = time.time()
+
     """Visualize the demo images."""
     parser = ArgumentParser()
     parser.add_argument('pose_config', help='Config file for detection')
@@ -299,3 +302,13 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     hrnet_aisbench(args.pose_config, args.pose_checkpoint, args.pose_om, args.img_path, args.device)
+
+    end_time_all = time.time()
+
+    #读取预处理文件数
+    files = os.listdir('./data/coco/val2017')
+    #fps
+    sample_num = len(files)
+    all_time = end_time_all - start_time_all
+    fps = sample_num / all_time
+    print(f'fps:{fps}samples/sec')
