@@ -151,5 +151,5 @@ if __name__ == '__main__':
     infer_result = hrnet_om_infer_result(result_keypoints='om_work_dir/result_keypoints.json')
     
     infer_result.append(json.dumps(infer_end))
-    with open(output_file,'w') as f:
+    with open(os.path.join('output',output_file),'w') as f:
         f.writelines(infer_result)
