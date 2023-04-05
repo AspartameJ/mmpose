@@ -18,7 +18,7 @@ do
   #echo "Record the status of  CPU NPU MEM"
   time=`date |awk '{print $4}'`
   mpstat >>${test_path_dir}/output/${RANK_ID}/cpu_monitor.log &
-  echo "$time "`npu-smi info | grep -E "310|0000:" | awk -v line=$((2*RANK_ID+1)) 'NR==line{printf "NPU=%s,   Power(W)=%s,\tTemp(C):%s   ",$3,$7,$8};NR==line+1{printf "AICore(%%):%s,   Memory-Usage(MB):%s/%s,  HBM-Usage(MB):%s/%s\n",$6,$7,$9,$10,$12}'` >>${test_path_dir}/output/${RANK_ID}/ascend_monitor.log &
+  echo "$time " `npu-smi info | grep -E "/" | awk -v line=$((2*RANK_ID+1)) 'NR==line{printf "NPU=%s,   Power(W)=%s,\tTemp(C):%s   HBM-Usage(MB):%s/%s,  ",$3,$7,$8,$9,$11};NR==line+1{printf "AICore(%%):%s,   Memory-Usage(MB):%s/%s  ",$7,$8,$10}'` >>${test_path_dir}/output/${RANK_ID}/ascend_monitor.log &
   echo  "$time "`free |grep Mem` >> ${test_path_dir}/output/${RANK_ID}/mem_monitor.log &
   sleep 1
 done
