@@ -70,9 +70,8 @@ def hrnet_postprocess():
 
     args = parser.parse_args()
 
-    if os.path.exists(args.work_dir):
-        shutil.rmtree(args.work_dir)
-    os.makedirs(args.work_dir)
+    if not os.path.exists(args.work_dir):
+        os.makedirs(args.work_dir)
 
     # prepare image list
     if osp.isfile(args.img_path):

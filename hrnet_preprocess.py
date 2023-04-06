@@ -68,12 +68,10 @@ def main():
         flip_index = dataset_info.flip_index
         skeleton = getattr(dataset_info, 'skeleton', None)
 
-    if os.path.exists(args.resized_img_root):
-        shutil.rmtree(args.resized_img_root)
-    if os.path.exists(args.fliped_img_root):
-        shutil.rmtree(args.fliped_img_root)
-    os.makedirs(args.resized_img_root)
-    os.makedirs(args.fliped_img_root)
+    if not os.path.exists(args.resized_img_root):
+        os.makedirs(args.resized_img_root)
+    if not os.path.exists(args.fliped_img_root):
+        os.makedirs(args.fliped_img_root)
 
     # resized_shape_map = {}
     # fliped_shape_map = {}

@@ -145,11 +145,13 @@ def tmp_om_infer_end():
     return end_dict
 
 if __name__ == '__main__':
-    output_file = 'rank0.out{}.log.json'.format(time.strftime('%Y%m%d%H%M%S'))
-
+    output_file = 'log/infer_{}.log'.format(0)
+    if os.path.exists(output_file):
+        output_file = 'log/infer_{}.log'.format(int(output_file[-5])+1)
+        
     infer_end = hrnet_om_infer_end()
     infer_result = hrnet_om_infer_result(result_keypoints='om_work_dir/result_keypoints.json')
     
     infer_result.append(json.dumps(infer_end))
-    with open(os.path.join('output',output_file),'w') as f:
+    with open(output_file,'w') as f:
         f.writelines(infer_result)
