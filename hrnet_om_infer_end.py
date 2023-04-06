@@ -19,7 +19,7 @@ def hrnet_om_infer_end():
         --output output_dir \
         --output_dirname resized_img_postprocess \
         --outfmt NPY \
-        --auto_set_dymdims_mode 1; \
+        --auto_set_dymdims_mode 1 & \
         python3 -m ais_bench \
         --model dynamic_hrnet.om \
         --input fliped_imgs \
@@ -89,7 +89,7 @@ def tmp_om_infer_end():
         --output output_dir \
         --output_dirname resized_img_postprocess \
         --outfmt NPY \
-        --auto_set_dymdims_mode 1; \
+        --auto_set_dymdims_mode 1 & \
         python3 -m ais_bench \
         --model dynamic_hrnet.om \
         --input fliped_imgs \
