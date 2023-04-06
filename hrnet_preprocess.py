@@ -79,8 +79,6 @@ def main():
     # fliped_shape_map = {}
     # process each image
 
-    preprocess(image_list)
-
     def preprocess(image_list):
         for image_name in mmcv.track_iter_progress(image_list):
         # for image_name in image_list:
@@ -142,6 +140,8 @@ def main():
             
             np.save(output_path_resized, image_resized)
             np.save(output_path_fliped, image_fliped)
+
+    preprocess(image_list)
 
 
 
