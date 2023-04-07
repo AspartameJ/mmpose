@@ -145,9 +145,7 @@ def tmp_om_infer_end():
     return end_dict
 
 if __name__ == '__main__':
-    output_file = 'log/infer_{}.log'.format(0)
-    if os.path.exists(output_file):
-        output_file = 'log/infer_{}.log'.format(int(output_file[-5])+1)
+    output_file = 'log/infer_0.log'
         
     infer_end = hrnet_om_infer_end()
     infer_result = hrnet_om_infer_result(result_keypoints='om_work_dir/result_keypoints.json')
