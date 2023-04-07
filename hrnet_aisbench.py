@@ -306,7 +306,7 @@ if __name__ == '__main__':
     end_time_all = time.time()
 
     #读取预处理文件数
-    files = os.listdir('./data/coco/val2017')
+    files = os.listdir(args.img_path)
     #fps
     sample_num = len(files)
     all_time = end_time_all - start_time_all
