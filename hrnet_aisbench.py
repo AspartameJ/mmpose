@@ -307,11 +307,10 @@ if __name__ == '__main__':
 
     #读取预处理文件数
     if not os.path.isdir(args.img_path):
-        files = 1
+        sample_num = 1
     else:
-        files = os.listdir(args.img_path)
+        sample_num = len(os.listdir(args.img_path))
     #fps
-    sample_num = len(files)
     all_time = end_time_all - start_time_all
     fps = sample_num / all_time
     print(f'fps:{fps}samples/sec')
