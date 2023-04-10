@@ -1,3 +1,4 @@
+import copy
 import os
 import shutil
 import warnings
@@ -40,10 +41,12 @@ def infer_dymdims(session, ndata):
 def hrnet_preprocess(img_metas):
     aug_data = img_metas['aug_data']
     image_resized = aug_data[0].to('cpu')
-    image_fliped = torch.flip(image_resized, [3]).numpy()
-    image_resized = image_resized.numpy()
+    image_resized_copy = copy.deepcopy(image_resized.data.cpu().contiguous().numpy())
+    image_resized_flip_copy = copy.deepcopy(image_resized)
+    image_resized_flip_copy = torch.flip(image_resized_flip_copy, [3]).data.cpu().contiguous().numpy()
+    
+    return image_resized_copy, image_resized_flip_copy
 
-    return image_resized, image_fliped
 
 def hrnet_postprocess(img_metas, cfg, image_resized_output, image_fliped_output):
     return_heatmap = False
